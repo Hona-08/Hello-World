@@ -1,0 +1,5 @@
+name = Hello World
+description = A simple Hello World custom module for learning Drupal 7.
+core = 7.x
+package = Custom
+version = 7.x-1.0

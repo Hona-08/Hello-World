@@ -1,0 +1,64 @@
+.hello-world-wrapper {
+  max-width: 650px;
+  margin: 30px auto;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.hello-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  padding: 40px;
+  text-align: center;
+  color: #fff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.hello-icon {
+  font-size: 50px;
+  margin-bottom: 10px;
+}
+
+.hello-title {
+  font-size: 32px;
+  margin: 0 0 10px 0;
+  color: #fff;
+}
+
+.hello-message {
+  font-size: 16px;
+  opacity: 0.9;
+  margin-bottom: 25px;
+}
+
+.hello-skills h3 {
+  font-size: 18px;
+  margin-bottom: 12px;
+  color: #e0e0ff;
+}
+
+.skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.skill-tag {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.skill-tag:hover {
+  background: rgba(255, 255, 255, 0.35);
+  cursor: default;
+}
+
+.hello-timestamp small {
+  display: block;
+  margin-top: 25px;
+  opacity: 0.6;
+  font-size: 12px;
+}

@@ -1,0 +1,54 @@
+<?php
+
+/**
+ * @file
+ * A simple Hello World module for Drupal 7.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function hello_world_menu() {
+  $items = array();
+
+  $items['hello'] = array(
+    'title' => 'Hello World',
+    'page callback' => 'hello_world_page',
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+/**
+ * Page callback for /hello.
+ */
+function hello_world_page() {
+  // Add CSS
+  drupal_add_css(drupal_get_path('module', 'hello_world') . '/hello_world.css');
+
+  // Use theme template instead of raw HTML
+  $output = theme('hello_world_output', array(
+    'name' => 'Hona',
+    'message' => 'Welcome to Drupal 7 Custom Module Development!',
+    'skills' => array('PHP', 'Drupal 7'),
+  ));
+  return $output;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function hello_world_theme() {
+  return array(
+    'hello_world_output' => array(
+      'variables' => array(
+        'name' => NULL,
+        'message' => NULL,
+        'skills' => array(),
+      ),
+      'template' => 'templates/hello-world',
+    ),
+  );
+}
