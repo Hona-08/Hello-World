@@ -34,3 +34,4 @@ hello_world/
 
 ## Author
 Hona — Learning Drupal 7 Module Development
+This is for learning purpose
