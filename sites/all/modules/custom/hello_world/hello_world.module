@@ -1,54 +1,88 @@
 <?php
 
-/**
- * @file
- * A simple Hello World module for Drupal 7.
- */
-
-/**
- * Implements hook_menu().
- */
-function hello_world_menu() {
-  $items = array();
-
-  $items['hello'] = array(
-    'title' => 'Hello World',
-    'page callback' => 'hello_world_page',
-    'access callback' => TRUE,
-    'type' => MENU_NORMAL_ITEM,
+// 1. Register entity type
+function hello_world_entity_info() {
+  return array(
+    'hello_world_greeting' => array(
+      'label'            => t('Greeting'),
+      'entity class'     => 'Entity',
+      'controller class' => 'EntityAPIController',
+      'base table'       => 'hello_world_greeting',
+      'entity keys'      => array('id' => 'gid', 'label' => 'title'),
+      'module'           => 'hello_world',
+    ),
   );
+}
 
+// 2. Routes
+function hello_world_menu() {
+  $items['hello'] = array(
+    'title'           => 'Hello World',
+    'page callback'   => 'hello_world_page',
+    'access callback' => TRUE,
+  );
+  $items['greetings'] = array(
+    'title'           => 'Greetings',
+    'page callback'   => 'hello_world_list',
+    'access callback' => TRUE,
+  );
+  $items['greetings/add'] = array(
+    'title'           => 'Add Greeting',
+    'page callback'   => 'drupal_get_form',
+    'page arguments'  => array('hello_world_add_form'),
+    'access callback' => TRUE,
+  );
   return $items;
 }
 
-/**
- * Page callback for /hello.
- */
+// 3. /hello page
 function hello_world_page() {
-  // Add CSS
-  drupal_add_css(drupal_get_path('module', 'hello_world') . '/hello_world.css');
-
-  // Use theme template instead of raw HTML
-  $output = theme('hello_world_output', array(
-    'name' => 'Hona',
-    'message' => 'Welcome to Drupal 7 Custom Module Development!',
-    'skills' => array('PHP', 'Drupal 7'),
+  return theme('hello_world', array(
+    'name'    => 'World',
+    'message' => 'My first Drupal 7 module!',
+    'skills'  => array('Drupal 7', 'Entity API', 'PHP'),
   ));
+}
+
+// 4. List greetings
+function hello_world_list() {
+  $greetings = entity_load('hello_world_greeting', FALSE);
+
+  if (empty($greetings)) {
+    return '<p>No greetings yet. ' . l('Add one', 'greetings/add') . '</p>';
+  }
+
+  $output = l('+ Add Greeting', 'greetings/add') . '<br><br>';
+  foreach ($greetings as $g) {
+    $output .= '<b>' . check_plain($g->title) . '</b>: ' . check_plain($g->message) . '<br>';
+  }
   return $output;
 }
 
-/**
- * Implements hook_theme().
- */
+// 5. Add form
+function hello_world_add_form($form, &$form_state) {
+  $form['title']   = array('#type' => 'textfield', '#title' => t('Title'),   '#required' => TRUE);
+  $form['message'] = array('#type' => 'textarea',  '#title' => t('Message'), '#required' => TRUE);
+  $form['submit']  = array('#type' => 'submit',    '#value' => t('Save'));
+  return $form;
+}
+
+function hello_world_add_form_submit($form, &$form_state) {
+  $greeting = entity_create('hello_world_greeting', array(
+    'title'   => $form_state['values']['title'],
+    'message' => $form_state['values']['message'],
+  ));
+  entity_save('hello_world_greeting', $greeting);
+  drupal_set_message(t('Greeting saved!'));
+  $form_state['redirect'] = 'greetings';
+}
+
 function hello_world_theme() {
   return array(
-    'hello_world_output' => array(
-      'variables' => array(
-        'name' => NULL,
-        'message' => NULL,
-        'skills' => array(),
-      ),
-      'template' => 'templates/hello-world',
+    'hello_world' => array(
+      'template'  => 'hello-world',
+      'path'      => drupal_get_path('module', 'hello_world') . '/templates',
+      'variables' => array('name' => '', 'message' => '', 'skills' => array()),
     ),
   );
 }

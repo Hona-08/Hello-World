@@ -1,0 +1,12 @@
+<?php
+function hello_world_schema() {
+  $schema['hello_world_greeting'] = array(
+    'fields' => array(
+      'gid'     => array('type' => 'serial',  'unsigned' => TRUE, 'not null' => TRUE),
+      'title'   => array('type' => 'varchar', 'length' => 255,    'not null' => TRUE, 'default' => ''),
+      'message' => array('type' => 'text',    'not null' => TRUE),
+    ),
+    'primary key' => array('gid'),
+  );
+  return $schema;
+}

@@ -1,0 +1,49 @@
+<?php
+class HelloWorldGreetingTest extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name'        => 'Greeting Entity Tests',
+      'description' => 'Tests Greeting entity create, save, load, delete.',
+      'group'       => 'Hello World',
+    );
+  }
+
+  public function setUp() {
+    parent::setUp('hello_world', 'entity');
+    $this->drupalLogin($this->drupalCreateUser(array()));
+  }
+
+  public function testCreateAndSave() {
+    $greeting = entity_create('hello_world_greeting', array('title' => 'Test', 'message' => 'Hello'));
+    entity_save('hello_world_greeting', $greeting);
+    $this->assertTrue($greeting->gid > 0, 'GID assigned — entity saved.');
+  }
+
+  public function testLoad() {
+    $greeting = entity_create('hello_world_greeting', array('title' => 'Load Me', 'message' => 'Hi'));
+    entity_save('hello_world_greeting', $greeting);
+    $loaded = entity_load_single('hello_world_greeting', $greeting->gid);
+    $this->assertEqual($loaded->title, 'Load Me', 'Loaded title matches.');
+  }
+
+  public function testDelete() {
+    $greeting = entity_create('hello_world_greeting', array('title' => 'Delete Me', 'message' => 'Bye'));
+    entity_save('hello_world_greeting', $greeting);
+    $gid = $greeting->gid;
+    entity_delete('hello_world_greeting', $gid);
+    $result = entity_load('hello_world_greeting', array($gid));
+    $this->assertTrue(empty($result), 'Entity deleted.');
+  }
+
+  public function testListPage() {
+    $this->drupalGet('greetings');
+    $this->assertResponse(200, '/greetings page loads.');
+  }
+
+  public function testAddForm() {
+    $this->drupalPost('greetings/add', array('title' => 'Browser Greeting', 'message' => 'Via form'), t('Save'));
+    $this->assertText('Greeting saved!', 'Success message shown.');
+    $this->assertText('Browser Greeting', 'Greeting in list.');
+  }
+}
